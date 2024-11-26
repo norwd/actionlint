@@ -14,6 +14,7 @@ import (
 // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#brandingcolor
 var BrandingColors = map[string]struct{}{
 	"white":     {},
+	"black":     {},
 	"yellow":    {},
 	"blue":      {},
 	"green":     {},
@@ -236,6 +237,7 @@ var BrandingIcons = map[string]struct{}{
 	"sun":                {},
 	"sunrise":            {},
 	"sunset":             {},
+	"table":              {},
 	"tablet":             {},
 	"tag":                {},
 	"target":             {},
