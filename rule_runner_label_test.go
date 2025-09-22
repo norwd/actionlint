@@ -36,11 +36,15 @@ func TestRuleRunnerLabelCheckLabels(t *testing.T) {
 		},
 		{
 			what:   "self-hosted all Linux runner labels",
-			labels: []string{"self-hosted", "linux", "ubuntu-22.04", "ubuntu-latest"},
+			labels: []string{"self-hosted", "linux", "ubuntu-24.04", "ubuntu-latest"},
 		},
 		{
 			what:   "self-hosted all macOS runner labels",
-			labels: []string{"self-hosted", "macOS", "macOS-latest", "macOS-14"},
+			labels: []string{"self-hosted", "macOS", "macOS-latest", "macOS-15"},
+		},
+		{
+			what:   "self-hosted all Windows runner labels",
+			labels: []string{"self-hosted", "windows", "windows-latest", "windows-2022"},
 		},
 		{
 			what:   "self-hosted Linux runner in upper case",
@@ -67,12 +71,16 @@ func TestRuleRunnerLabelCheckLabels(t *testing.T) {
 			labels: []string{"windows-latest-8-cores"},
 		},
 		{
-			what:   "larger Windows runner with other labels",
+			what:   "multiple labels for GH-hosted Linux runner",
+			labels: []string{"ubuntu-latest", "ubuntu-24.04"},
+		},
+		{
+			what:   "multiple labels for GH-hosted Windows runner",
 			labels: []string{"windows-latest", "windows-2022"},
 		},
 		{
-			what:   "multiple labels for GH-hosted runner",
-			labels: []string{"ubuntu-latest", "ubuntu-22.04"},
+			what:   "multiple labels for GH-hosted macOS runner",
+			labels: []string{"macos-latest", "macos-15"},
 		},
 		{
 			what:   "user-defined labels",
@@ -101,7 +109,7 @@ func TestRuleRunnerLabelCheckLabels(t *testing.T) {
 		},
 		{
 			what:   "matrix at first label",
-			labels: []string{"${{matrix.os}}", "ubuntu-22.04"},
+			labels: []string{"${{matrix.os}}", "ubuntu-24.04"},
 			matrix: []string{"ubuntu-latest"},
 		},
 		{
@@ -226,14 +234,34 @@ func TestRuleRunnerLabelCheckLabels(t *testing.T) {
 			},
 		},
 		{
-			what:   "Linux labels conflict",
-			labels: []string{"ubuntu-latest", "ubuntu-24.04"},
-			errs:   []string{`label "ubuntu-24.04" conflicts with label "ubuntu-latest"`},
+			what:   "Linux labels version conflict",
+			labels: []string{"ubuntu-latest", "ubuntu-22.04"},
+			errs:   []string{`label "ubuntu-22.04" conflicts with label "ubuntu-latest"`},
 		},
 		{
-			what:   "macOS labels conflict",
-			labels: []string{"macos-13", "macos-14"},
-			errs:   []string{`label "macos-14" conflicts with label "macos-13"`},
+			what:   "macOS labels version conflict",
+			labels: []string{"macos-14", "macos-15"},
+			errs:   []string{`label "macos-15" conflicts with label "macos-14"`},
+		},
+		{
+			what:   "Windows labels version conflict",
+			labels: []string{"windows-2025", "windows-2022"},
+			errs:   []string{`label "windows-2022" conflicts with label "windows-2025"`},
+		},
+		{
+			what:   "Linux labels architecture conflict",
+			labels: []string{"ubuntu-24.04", "ubuntu-22.04"},
+			errs:   []string{`label "ubuntu-22.04" conflicts with label "ubuntu-24.04"`},
+		},
+		{
+			what:   "macOS labels architecture conflict",
+			labels: []string{"macos-15", "macos-15-intel"},
+			errs:   []string{`label "macos-15-intel" conflicts with label "macos-15"`},
+		},
+		{
+			what:   "Windows labels architecture conflict",
+			labels: []string{"windows-2025", "windows-11-arm"},
+			errs:   []string{`label "windows-11-arm" conflicts with label "windows-2025"`},
 		},
 		{
 			what:   "macOS XL and normal labels conflict",

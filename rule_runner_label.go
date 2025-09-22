@@ -18,9 +18,11 @@ const (
 	compatMacOS140L
 	compatMacOS140XL
 	compatMacOS150
+	compatMacOS150Intel
 	compatMacOS150L
 	compatMacOS150XL
-	compatWindows2019
+	compatMacOS260
+	compatMacOS260XL
 	compatWindows2022
 	compatWindows2025
 	compatWindows11Arm
@@ -32,7 +34,6 @@ var allGitHubHostedRunnerLabels = []string{
 	"windows-latest-8-cores",
 	"windows-2025",
 	"windows-2022",
-	"windows-2019",
 	"windows-11-arm",
 	"ubuntu-latest",
 	"ubuntu-latest-4-cores",
@@ -46,6 +47,9 @@ var allGitHubHostedRunnerLabels = []string{
 	"macos-latest-xl",
 	"macos-latest-xlarge",
 	"macos-latest-large",
+	"macos-26-xlarge",
+	"macos-26",
+	"macos-15-intel",
 	"macos-15-xlarge",
 	"macos-15-large",
 	"macos-15",
@@ -75,18 +79,21 @@ var selfHostedRunnerPresetOtherLabels = []string{
 }
 
 var defaultRunnerOSCompats = map[string]runnerOSCompat{
-	"ubuntu-latest":          compatUbuntu2204,
-	"ubuntu-latest-4-cores":  compatUbuntu2204,
-	"ubuntu-latest-8-cores":  compatUbuntu2204,
-	"ubuntu-latest-16-cores": compatUbuntu2204,
+	"ubuntu-latest":          compatUbuntu2404,
+	"ubuntu-latest-4-cores":  compatUbuntu2404,
+	"ubuntu-latest-8-cores":  compatUbuntu2404,
+	"ubuntu-latest-16-cores": compatUbuntu2404,
 	"ubuntu-24.04":           compatUbuntu2404,
 	"ubuntu-24.04-arm":       compatUbuntu2404,
 	"ubuntu-22.04":           compatUbuntu2204,
 	"ubuntu-22.04-arm":       compatUbuntu2204,
-	"macos-latest-xl":        compatMacOS140XL,
-	"macos-latest-xlarge":    compatMacOS140XL,
-	"macos-latest-large":     compatMacOS140L,
-	"macos-latest":           compatMacOS140,
+	"macos-latest-xl":        compatMacOS150XL,
+	"macos-latest-xlarge":    compatMacOS150XL,
+	"macos-latest-large":     compatMacOS150L,
+	"macos-latest":           compatMacOS150,
+	"macos-26-xlarge":        compatMacOS260XL,
+	"macos-26":               compatMacOS260,
+	"macos-15-intel":         compatMacOS150Intel,
 	"macos-15-xlarge":        compatMacOS150XL,
 	"macos-15-large":         compatMacOS150L,
 	"macos-15":               compatMacOS150,
@@ -102,11 +109,10 @@ var defaultRunnerOSCompats = map[string]runnerOSCompat{
 	"windows-latest-8-cores": compatWindows2022,
 	"windows-2025":           compatWindows2025,
 	"windows-2022":           compatWindows2022,
-	"windows-2019":           compatWindows2019,
 	"windows-11-arm":         compatWindows11Arm,
 	"linux":                  compatUbuntu2404 | compatUbuntu2204, // Note: "linux" does not always indicate Ubuntu. It might be Fedora or Arch or ...
-	"macos":                  compatMacOS150 | compatMacOS150L | compatMacOS150XL | compatMacOS140 | compatMacOS140L | compatMacOS140XL | compatMacOS130 | compatMacOS130L | compatMacOS130XL,
-	"windows":                compatWindows2025 | compatWindows2022 | compatWindows2019 | compatWindows11Arm,
+	"macos":                  compatMacOS260 | compatMacOS260XL | compatMacOS150 | compatMacOS150Intel | compatMacOS150L | compatMacOS150XL | compatMacOS140 | compatMacOS140L | compatMacOS140XL | compatMacOS130 | compatMacOS130L | compatMacOS130XL,
+	"windows":                compatWindows2025 | compatWindows2022 | compatWindows11Arm,
 }
 
 // RuleRunnerLabel is a rule to check runner label like "ubuntu-latest". There are two types of
