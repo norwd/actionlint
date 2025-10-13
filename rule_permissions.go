@@ -5,21 +5,21 @@ import (
 )
 
 var allPermissionScopes = map[string][]string{
-	"actions":             []string{"read", "write", "none"},
-	"attestations":        []string{"read", "write", "none"},
-	"checks":              []string{"read", "write", "none"},
-	"contents":            []string{"read", "write", "none"},
-	"deployments":         []string{"read", "write", "none"},
-	"discussions":         []string{"read", "write", "none"},
-	"id-token":            []string{"write", "none"},
-	"issues":              []string{"read", "write", "none"},
-	"models":              []string{"read", "none"},
-	"packages":            []string{"read", "write", "none"},
-	"pages":               []string{"read", "write", "none"},
-	"pull-requests":       []string{"read", "write", "none"},
-	"repository-projects": []string{"read", "write", "none"},
-	"security-events":     []string{"read", "write", "none"},
-	"statuses":            []string{"read", "write", "none"},
+	"actions":             {"read", "write", "none"},
+	"attestations":        {"read", "write", "none"},
+	"checks":              {"read", "write", "none"},
+	"contents":            {"read", "write", "none"},
+	"deployments":         {"read", "write", "none"},
+	"discussions":         {"read", "write", "none"},
+	"id-token":            {"write", "none"},
+	"issues":              {"read", "write", "none"},
+	"models":              {"read", "none"},
+	"packages":            {"read", "write", "none"},
+	"pages":               {"read", "write", "none"},
+	"pull-requests":       {"read", "write", "none"},
+	"repository-projects": {"read", "write", "none"},
+	"security-events":     {"read", "write", "none"},
+	"statuses":            {"read", "write", "none"},
 }
 
 // RulePermissions is a rule checker to check permission configurations in a workflow.
@@ -60,29 +60,25 @@ func (rule *RulePermissions) checkPermissions(p *Permissions) {
 		case "write-all", "read-all":
 			// OK
 		default:
-			rule.Errorf(p.All.Pos, "%q is invalid for permission for all the scopes. available values are \"read-all\" and \"write-all\"", p.All.Value)
+			rule.Errorf(p.All.Pos, "%q is invalid for permission for all the scopes. available values are \"read-all\", \"write-all\" or {}", p.All.Value)
 		}
 		return
 	}
 
 	for _, p := range p.Scopes {
 		n := p.Name.Value // Permission names are case-sensitive
-		scopeValues, ok := allPermissionScopes[n]
+		s, ok := allPermissionScopes[n]
 		if !ok {
 			ss := make([]string, 0, len(allPermissionScopes))
 			for s := range allPermissionScopes {
 				ss = append(ss, s)
 			}
 			rule.Errorf(p.Name.Pos, "unknown permission scope %q. all available permission scopes are %s", n, sortedQuotes(ss))
+			continue
 		}
 
-		if !slices.Contains(scopeValues, p.Value.Value) {
-			switch len(scopeValues) {
-			case 2:
-				rule.Errorf(p.Value.Pos, "%q is invalid for permission of scope %q. available values are %q or %q", p.Value.Value, n, scopeValues[0], scopeValues[1])
-			case 3:
-				rule.Errorf(p.Value.Pos, "%q is invalid for permission of scope %q. available values are %q, %q or %q", p.Value.Value, n, scopeValues[0], scopeValues[1], scopeValues[2])
-			}
+		if !slices.Contains(s, p.Value.Value) {
+			rule.Errorf(p.Value.Pos, "%q is invalid as permission of scope %q. available values are %s", p.Value.Value, n, quotes(s))
 		}
 	}
 }
