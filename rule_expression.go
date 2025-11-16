@@ -1,6 +1,8 @@
 package actionlint
 
 import (
+	"maps"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -249,6 +251,7 @@ func (rule *RuleExpression) VisitJobPre(n *Job) error {
 	}
 
 	rule.checkWorkflowCall(n.WorkflowCall)
+	rule.checkSnapshot(n.Snapshot)
 
 	rule.stepsTy = NewEmptyStrictObjectType()
 
@@ -575,6 +578,15 @@ func (rule *RuleExpression) checkWorkflowCall(c *WorkflowCall) {
 	}
 }
 
+func (rule *RuleExpression) checkSnapshot(s *Snapshot) {
+	if s == nil {
+		return
+	}
+	// XXX: Available contexts in `jobs.<job_name>.snapshot` is not defined in the document.
+	// https://github.com/github/docs/issues/41255
+	rule.checkIfCondition(s.If, "🐶")
+}
+
 func (rule *RuleExpression) checkWebhookEventFilter(f *WebhookEventFilter) {
 	if f == nil {
 		return
@@ -781,7 +793,13 @@ func (rule *RuleExpression) checkSemanticsOfExprNode(expr ExprNode, line, col in
 	if rule.jobsTy != nil {
 		c.UpdateJobs(rule.jobsTy)
 	}
-	if workflowKey != "" {
+	if workflowKey == "🐶" {
+		// XXX: This is a special case for `jobs.<job_name>.snapshot`. See `checkSnapshot` method
+		ctx := slices.Sorted(maps.Keys(AllContexts))
+		sp := slices.Sorted(maps.Keys(SpecialFunctionNames))
+		c.SetContextAvailability(ctx)
+		c.SetSpecialFunctionAvailability(sp)
+	} else if workflowKey != "" {
 		ctx, sp := WorkflowKeyAvailability(workflowKey)
 		if len(ctx) == 0 {
 			rule.Debug("No context availability was found for workflow key %q", workflowKey)
