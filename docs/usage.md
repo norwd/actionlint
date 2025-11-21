@@ -272,7 +272,7 @@ and pyflakes).
 Available tags are:
 
 - `actionlint:latest`: Latest stable version of actionlint. This image is recommended.
-- `actionlint:{version}`: Specific version of actionlint. (e.g. `actionlint:1.7.8`)
+- `actionlint:{version}`: Specific version of actionlint. (e.g. `actionlint:1.7.9`)
 
 Just run the image with `docker run`:
 
@@ -383,7 +383,7 @@ Add this to your `.pre-commit-config.yaml` in your repository:
 ---
 repos:
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.8
+    rev: v1.7.9
     hooks:
       - id: actionlint
 ```
@@ -442,7 +442,7 @@ trunk check enable actionlint
 or if you'd like a specific version:
 
 ```bash
-trunk check enable actionlint@1.7.8
+trunk check enable actionlint@1.7.9
 ```
 
 or modify `.trunk/trunk.yaml` in your repository to contain:
@@ -450,7 +450,7 @@ or modify `.trunk/trunk.yaml` in your repository to contain:
 ```yaml
 lint:
   enabled:
-    - actionlint@1.7.8
+    - actionlint@1.7.9
 ```
 
 Then just run:
