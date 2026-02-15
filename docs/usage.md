@@ -207,7 +207,7 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download actionlint
         id: get_actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
@@ -246,7 +246,7 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Check workflow files
         uses: docker://rhysd/actionlint:latest
         with:
@@ -336,7 +336,7 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: reviewdog/action-actionlint@v1
         with:
           color: true
@@ -480,7 +480,7 @@ You can also see actionlint issues inline in VS Code via the [Trunk VS Code exte
 [super-linter]: https://github.com/github/super-linter
 [super-linter-env-var]: https://github.com/super-linter/super-linter#environment-variables
 [actionlint-matcher]: https://raw.githubusercontent.com/rhysd/actionlint/main/.github/actionlint-matcher.json
-[preinstall-ubuntu]: https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md
+[preinstall-ubuntu]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
 [pre-commit]: https://pre-commit.com
 [go-install]: https://go.dev/doc/install
 [docker]: https://www.docker.com/
